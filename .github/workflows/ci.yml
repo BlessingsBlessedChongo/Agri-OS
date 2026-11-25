@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: agrios
+          POSTGRES_PASSWORD: agrios
+          POSTGRES_DB: agrios
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U agrios"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://agrios:agrios@localhost:5432/agrios
+      TEST_DATABASE_URL: postgresql://agrios:agrios@localhost:5432/agrios_test
+      SIGNING_SEED: '0000000000000000000000000000000000000000000000000000000000000001'
+      APP_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Test database
+        run: psql postgresql://agrios:agrios@localhost:5432/agrios -c "create database agrios_test"
+      - run: npm run typecheck
+      - run: npm run lint
+      - name: Unit, property and integration tests
+        run: npm test
+      - name: Migrations are complete
+        run: npx drizzle-kit check
+      - run: npm run db:migrate && npm run db:seed
+      - run: npm run build
+      - name: End to end over HTTP (calm, then a storm)
+        run: |
+          npm start &
+          for i in $(seq 1 60); do curl -sf http://localhost:3000/api/health && break; sleep 1; done
+          npm run e2e
+          npm run e2e -- --storm
+      - name: Browser journey
+        run: |
+          npx playwright install --with-deps chromium
+          npm run e2e:browser
