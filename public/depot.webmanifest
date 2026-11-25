@@ -1,0 +1,11 @@
+{
+  "name": "Agri-OS Depot",
+  "short_name": "Depot",
+  "description": "Weigh and grade farmers' deliveries, with or without signal.",
+  "start_url": "/depot",
+  "scope": "/depot",
+  "display": "standalone",
+  "background_color": "#e6ebe7",
+  "theme_color": "#1e5b35",
+  "icons": [{ "src": "/depot-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
