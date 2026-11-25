@@ -1,0 +1,56 @@
+{
+  "name": "agri-os",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Trade infrastructure for smallholder farmers in Zambia: USSD offers, depot weighing, escrowed mobile-money settlement, reverse invoicing and a tax-authority view. Payments and e-invoicing are simulated.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.9"
+  },
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:db": "vitest run tests/property tests/integration",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx --env-file-if-exists=.env scripts/migrate.ts",
+    "db:seed": "tsx --env-file-if-exists=.env scripts/seed.ts",
+    "setup": "tsx scripts/setup.ts",
+    "e2e": "tsx --env-file-if-exists=.env scripts/e2e.ts",
+    "e2e:browser": "playwright test",
+    "loadtest": "node scripts/loadtest.mjs",
+    "map": "node scripts/build-map.mjs"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.4",
+    "lucide-react": "^1.80.0",
+    "next": "16.4.6",
+    "pg": "^8.23.1",
+    "qrcode": "^1.5.4",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^24.19.4",
+    "@types/pg": "^8.23.1",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.3.3",
+    "@types/react-dom": "^19.3.0",
+    "autocannon": "^9.0.0",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.4.6",
+    "fast-check": "^4.11.0",
+    "tailwindcss": "^4.3.5",
+    "tsx": "^4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "^5.1.2"
+  }
+}
